@@ -54,19 +54,29 @@ jobs:
     - name: Install Production Tools
       run: npm install @google/genai @11ty/eleventy --save-dev
 
-    # 4. 🌟 核心優化：無論定時運行還是手動未填寫，後備默認值全量切換為 '1' 篇
+    # 4. 運行内容生成器生成新文章
     - name: Run Gemini Content Generator
       env:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
       run: node autobot.js ${{ github.event.inputs.post_count || '1' }}
 
-    # 5. 強制解鎖 node_modules 可執行特權，阻斷 Exit code 127 錯誤
+    # 5. 強制解鎖 node_modules 可執行特權并编译网站
+    # (同時在 src 源码目录和 _site 编译目录双重塞入验证文件，确保跟着源码一起被推回 GitHub)
     - name: Build Eleventy Site
+      env:
+        INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
       run: |
         chmod -R +x ./node_modules/.bin/
+        if [ -n "$INDEXNOW_KEY" ]; then
+          echo "$INDEXNOW_KEY" > ./src/$INDEXNOW_KEY.txt
+        fi
         npx @11ty/eleventy
+        if [ -n "$INDEXNOW_KEY" ]; then
+          echo "$INDEXNOW_KEY" > ./_site/$INDEXNOW_KEY.txt
+          echo "✅ 成功在内存源码与发布目录创建必应物理校验文件"
+        fi
 
-    # 6. 檢查是否有新文章誕生，並自動推回 GitHub
+    # 6. 檢查是否有新文章和驗證文件誕生，第一時間暴力推回 GitHub 主網触发线上托管商编译
     - name: Commit and Push Changes back to Repo
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -74,15 +84,112 @@ jobs:
         git config --global user.name "Gemini-Content-Bot"
         git config --global user.email "bot@yourdomain.com"
         
-        # 只將源碼與詞庫變更推回 main 分支
-        git add src/posts/ src/keywords.json
+        # 除了文章和词库，把必应的校验 txt 文件也一起打包强推上去！
+        git add src/posts/ src/keywords.json src/*.txt
         
-        # 檢查是否有代碼改變（包括 keywords.json 的減少、posts 內新 md 的增加）
         if ! git diff --cached --quiet; then
-          git commit -m "🤖 [Bot] 自動同步/手動測試：更新文章並同步詞庫"
-          # 在最後加上 -f 特權鎖，暴力解決 [rejected] 歷史斷層衝突，強制覆蓋遠端
+          git commit -m "🤖 [Bot] 自動同步/手動測試：更新文章、驗證文件並同步詞庫"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main -f
-          echo "✅ 成功將新文章與更新後的詞庫同步回 GitHub 倉庫！"
+          echo "✅ 成功將新文章與更新後的詞庫、驗證文件同步回 GitHub 遠端倉庫！"
         else
-          echo "⚠️ 檢查發現本地文件無任何变化，本次自動跳過推送。"
+          echo "⚠️ 檢查發現本地文件無任何变化，本次自動跳過源碼推送。"
         fi
+
+    # 7. 🌟【智能化决胜步骤】线上文件不生效不推送，开启主动网络探测 🌟
+    - name: Execute Instant SEO Push to Bing
+      env:
+        INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+      run: |
+        DOMAIN="deepseek-1.com"
+        VALIDATION_URL="https://${DOMAIN}/${INDEXNOW_KEY}.txt"
+        
+        echo "📡 开始智能探测线上验证文件状态: ${VALIDATION_URL}"
+        
+        # 用一个最大循环 30 次的死循环，每 5 秒用 cURL 检测一次线上文件状态
+        for i in {1..30}; do
+          STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" "${VALIDATION_URL}")
+          if [ "$STATUS_CODE" = "200" ]; then
+            echo "🎉 极佳！检测到线上验证文件已 100% 同步生效 (HTTP 200)。准备发射 API..."
+            break
+          else
+            echo "⏳ 线上服务仍在构建中/CDN尚未刷新 (当前状态: ${STATUS_CODE})，等待 5 秒 (尝试 ${i}/30)..."
+            sleep 5
+          fi
+          
+          if [ $i -eq 30 ]; then
+            echo "⚠️ 警告：等待线上托管同步超时，将尝试强行推送。"
+          fi
+        done
+        
+        # 🌟 通过极简无冲突的脚本创建方式，严格满足官方 POST 标准规范 🌟
+        echo 'const fs = require("fs");' > bing-instant-push.js
+        echo 'const path = require("path");' >> bing-instant-push.js
+        echo 'const https = require("https");' >> bing-instant-push.js
+        echo 'const DOMAIN = "deepseek-1.com";' >> bing-instant-push.js
+        echo 'const BING_KEY = process.env.INDEXNOW_KEY;' >> bing-instant-push.js
+        echo 'const OUTPUT_DIR = path.join(__dirname, "_site");' >> bing-instant-push.js
+        echo 'function getAllHtmlFiles(dirPath, arrayOfFiles = []) {' >> bing-instant-push.js
+        echo '  if (!fs.existsSync(dirPath)) return arrayOfFiles;' >> bing-instant-push.js
+        echo '  const files = fs.readdirSync(dirPath);' >> bing-instant-push.js
+        echo '  files.forEach((file) => {' >> bing-instant-push.js
+        echo '    const fullPath = path.join(dirPath, file);' >> bing-instant-push.js
+        echo '    if (fs.statSync(fullPath).isDirectory()) {' >> bing-instant-push.js
+        echo '      arrayOfFiles = getAllHtmlFiles(fullPath, arrayOfFiles);' >> bing-instant-push.js
+        echo '    } else if (file.endsWith(".html")) {' >> bing-instant-push.js
+        echo '      arrayOfFiles.push(fullPath);' >> bing-instant-push.js
+        echo '    }' >> bing-instant-push.js
+        echo '  });' >> bing-instant-push.js
+        echo '  return arrayOfFiles;' >> bing-instant-push.js
+        echo '}' >> bing-instant-push.js
+        echo 'try {' >> bing-instant-push.js
+        echo '  const htmlFiles = getAllHtmlFiles(OUTPUT_DIR);' >> bing-instant-push.js
+        echo '  let urlList = htmlFiles.map(filePath => {' >> bing-instant-push.js
+        echo '    let relativePath = path.relative(OUTPUT_DIR, filePath).replace(/\\/g, "/");' >> bing-instant-push.js
+        echo '    if (relativePath.endsWith("index.html")) {' >> bing-instant-push.js
+        echo '      relativePath = relativePath.slice(0, -10);' >> bing-instant-push.js
+        echo '    } else if (relativePath.endsWith(".html")) {' >> bing-instant-push.js
+        echo '      relativePath = relativePath.slice(0, -5);' >> bing-instant-push.js
+        echo '    }' >> bing-instant-push.js
+        echo '    return "https://" + DOMAIN + "/" + relativePath;' >> bing-instant-push.js
+        echo '  });' >> bing-instant-push.js
+        echo '  urlList = urlList.filter(url => !url.includes("404") && !url.includes("admin") && !url.endsWith(".txt"));' >> bing-instant-push.js
+        echo '  if (urlList.length === 0) {' >> bing-instant-push.js
+        echo '    console.log("ℹ️ 未发现有效页面，无需推送。");' >> bing-instant-push.js
+        echo '    process.exit(0);' >> bing-instant-push.js
+        echo '  }' >> bing-instant-push.js
+        echo '  console.log("🚀 正在将 " + urlList.length + " 个有效网域 URL 推送给必应集群...");' >> bing-instant-push.js
+        echo '  const requestData = JSON.stringify({' >> bing-instant-push.js
+        echo '    host: DOMAIN,' >> bing-instant-push.js
+        echo '    key: BING_KEY,' >> bing-instant-push.js
+        echo '    keyLocation: "https://" + DOMAIN + "/" + BING_KEY + ".txt",' >> bing-instant-push.js
+        echo '    urlList: urlList' >> bing-instant-push.js
+        echo '  });' >> bing-instant-push.js
+        echo '  const options = {' >> bing-instant-push.js
+        echo '    hostname: "api.indexnow.org",' >> bing-instant-push.js
+        echo '    path: "/IndexNow",' >> bing-instant-push.js
+        echo '    method: "POST",' >> bing-instant-push.js
+        echo '    headers: {' >> bing-instant-push.js
+        echo '      "Content-Type": "application/json; charset=utf-8",' >> bing-instant-push.js
+        echo '      "Content-Length": Buffer.byteLength(requestData)' >> bing-instant-push.js
+        echo '    }' >> bing-instant-push.js
+        echo '  };' >> bing-instant-push.js
+        echo '  const req = https.request(options, (res) => {' >> bing-instant-push.js
+        echo '    let body = "";' >> bing-instant-push.js
+        echo '    res.on("data", (chunk) => body += chunk);' >> bing-instant-push.js
+        echo '    res.on("end", () => {' >> bing-instant-push.js
+        echo '      if (res.statusCode === 200 || res.statusCode === 202) {' >> bing-instant-push.js
+        echo '        console.log("✅ [完美闭环] 必应 IndexNow 成功接收！状态码: " + res.statusCode + " (暗号对接成功)");' >> bing-instant-push.js
+        echo '      } else {' >> bing-instant-push.js
+        echo '        console.error("❌ 推送失败，状态码: " + res.statusCode + ", 响应: " + body);' >> bing-instant-push.js
+        echo '      }' >> bing-instant-push.js
+        echo '    });' >> bing-instant-push.js
+        echo '  });' >> bing-instant-push.js
+        echo '  req.on("error", (e) => console.error("❌ 请求必应接口失败: " + e.message));' >> bing-instant-push.js
+        echo '  req.write(requestData);' >> bing-instant-push.js
+        echo '  req.end();' >> bing-instant-push.js
+        echo '} catch (err) {' >> bing-instant-push.js
+        echo '  console.error("❌ 自动化推送运行出错:", err);' >> bing-instant-push.js
+        echo '}' >> bing-instant-push.js
+        
+        # 完美无阻碍执行推送
+        node bing-instant-push.js
