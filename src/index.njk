@@ -1,47 +1,40 @@
 ---
 layout: layouts/base.njk
-title: DeepSeek 智能一號核心樞紐 - 全球 AI 技術分發與跨境提效中心
-description: 專注於 DeepSeek 推理模型的一號核心節點佈局。提供 2026 最新官方登入入口、API 多節點負載均衡配置及跨境站群自動化發文機器人技術閉環。
+title: DeepSeek 下載、API 與使用指南
+description: 整理 DeepSeek 網頁版登入、API 密鑰申請、提示詞技巧、503/429 錯誤排查與本地 Ollama 部署的繁體中文實操說明。
+pageKeywords: DeepSeek 登入,DeepSeek API,DeepSeek 提示詞,DeepSeek 教程,深度求索
 ---
 
 <style>
-<meta name="baidu-site-verification" content="codeva-gbRwIYdftJ" />
-  /* Hero Banner */
   .hero-banner { background: var(--soft-bg); padding: 80px 0; border-bottom: 1px solid #e2e8f0; text-align: center; }
   .hero-banner p { font-size: 18px; color: #64748b; max-width: 750px; margin: 25px auto; }
   .main-h1 { font-size: 38px; color: var(--text-dark); margin: 0; line-height: 1.2; }
-
-  /* 深度描述區 */
   .core-vision { padding: 80px 0; background: #fff; }
   .vision-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
   @media (max-width: 768px) { .vision-grid { grid-template-columns: 1fr; } }
   .vision-text h2 { font-size: 28px; color: var(--main-indigo); margin-bottom: 20px; }
   .vision-img img { width: 100%; border-radius: 12px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-
-  /* 六宮格矩陣 */
   .matrix-section { padding: 80px 0; background: var(--soft-bg); }
   .matrix-h2 { text-align: center; margin-bottom: 50px; font-size: 30px; }
-  .grid-6 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; }
-  .grid-card { background: #fff; padding: 35px; border-radius: 15px; border: 1px solid #e2e8f0; transition: 0.3s; }
-  .grid-card:hover { transform: translateY(-8px); border-color: var(--main-indigo); box-shadow: 0 10px 25px rgba(67, 56, 202, 0.08); }
+  .grid-6 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; }
+  .grid-card { background: #fff; padding: 30px; border-radius: 15px; border: 1px solid #e2e8f0; transition: 0.3s; }
+  .grid-card:hover { transform: translateY(-4px); border-color: var(--main-indigo); box-shadow: 0 10px 25px rgba(67, 56, 202, 0.08); }
   .grid-card h3 { font-size: 19px; color: var(--main-indigo); margin-top: 0; }
   .grid-card p { font-size: 14px; color: #4b5563; margin-bottom: 0; line-height: 1.6; }
-
-  /* 文章板塊 */
+  .grid-card a { color: var(--main-indigo); font-weight: 600; text-decoration: none; font-size: 14px; }
   .home-posts { padding: 80px 0; }
-  .post-item-simple { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #f1f5f9; }
+  .post-item-simple { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #f1f5f9; gap: 20px; }
   .post-item-simple a { font-size: 18px; color: var(--text-dark); text-decoration: none; font-weight: 600; }
   .post-item-simple a:hover { color: var(--main-indigo); }
-  .post-date { font-size: 13px; color: #94a3b8; }
+  .post-date { font-size: 13px; color: #94a3b8; white-space: nowrap; }
 </style>
 
 <section class="hero-banner">
   <div class="container">
-    {# 首頁唯一 H1 #}
-    <h2 class="main-h1">一號樞紐：鏈接全球 DeepSeek 智慧生態</h2>
-    <p>我們作為 **DeepSeek 一號核心節點**，致力於為亞太及全球站長提供最穩定的模型分發技術與跨境 SEO 流量獲取方案。在數據大航海時代，我們是您 AI 工具箱中最堅固的基石。</p>
+    <h2 class="main-h1">DeepSeek 使用指南與常見問題整理</h2>
+    <p>本站整理 DeepSeek 網頁版登入、API 接入、提示詞撰寫、錯誤排查與本地部署等實用資料，方便香港及海外華人快速上手。內容以實際操作步驟為主，並非 DeepSeek 官方網站。</p>
     <div style="margin-top: 30px;">
-       <a href="/posts/" style="background: var(--main-indigo); color:#fff; padding: 12px 30px; border-radius: 6px; text-decoration:none; font-weight:bold;">探索技術檔案庫</a>
+       <a href="/posts/" style="background: var(--main-indigo); color:#fff; padding: 12px 30px; border-radius: 6px; text-decoration:none; font-weight:bold;">查看全部教程</a>
     </div>
   </div>
 </section>
@@ -49,43 +42,49 @@ description: 專注於 DeepSeek 推理模型的一號核心節點佈局。提供
 <section class="core-vision">
   <div class="container vision-grid">
     <div class="vision-text">
-      <h2>超越模型本身：構建技術閉環</h2>
-      <p>目前許多用戶在使用 DeepSeek 時，僅僅停留在簡單的網頁對話層面。作為「智能一號核心樞紐」，我們倡導的是**「模型 + 自動化 + 流量」**的完整閉環。</p>
-      <p>通過自研的 Gemini 自動化發文機器人 `autobot.js`，我們成功實現了在 GitHub 雲端無人值守的高頻發佈。這不僅僅是內容的生成，更是對搜尋引擎抓取頻率、頁面權重分佈、以及 H1 標籤精密管理的極致優化。</p>
+      <h2>先解決最常見的使用問題</h2>
+      <p>多數使用者卡在登入失敗、API 429/503、提示詞輸出不穩定，或不清楚本地部署該選哪個模型。本站優先整理這些高頻場景，把步驟拆成可直接照做的清單。</p>
+      <p>若你準備接入 API，建議先閱讀密鑰申請與限流說明，再搭配重試策略處理高峰時段錯誤；若只在網頁版使用，可先從登入與瀏覽器快取排查開始。</p>
     </div>
     <div class="vision-img">
-      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800" alt="科技藍圖與樞紐中心">
+      <img src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=800" alt="DeepSeek 技術資料整理示意圖">
     </div>
   </div>
 </section>
 
 <section class="matrix-section">
   <div class="container">
-    <h2 class="matrix-h2">六大核心技術支柱</h2>
+    <h2 class="matrix-h2">入門教程導航</h2>
     <div class="grid-6">
       <div class="grid-card">
-        <h3>📍 掃碼登入安全性優化</h3>
-        <p>提供 2026 官方權威登入指南，解決多設備多開與獨立純淨 IP 配置難題，徹底杜絕因網環境波動導致的號源風控問題。</p>
+        <h3>網頁版登入與錯誤排查</h3>
+        <p>涵蓋登入失敗、驗證碼異常、503 忙碌提示與瀏覽器快取清理等常見問題。</p>
+        <p style="margin-top:12px;"><a href="/posts/deepseek-web-login-troubleshoot/">閱讀教程 →</a></p>
       </div>
       <div class="grid-card">
-        <h3>⚡ API 負載均衡架構</h3>
-        <p>詳解如何在高併發請求下，利用異步呼叫與多執行緒並發流控，攻克官方閘道高載報錯 503 的通訊瓶頸。</p>
+        <h3>API 密鑰與限流</h3>
+        <p>說明 API Key 申請、請求限流、Token 用量觀察，以及 429 錯誤的處理方式。</p>
+        <p style="margin-top:12px;"><a href="/posts/deepseek-api-key-and-limits/">閱讀教程 →</a></p>
       </div>
       <div class="grid-card">
-        <h3>📦 站群自動化發佈閉環</h3>
-        <p>基於 Eleventy 與 GitHub Actions 的極速部署方案。實現每日自動彈出關鍵字、自動配給插圖、自動生成繁體 SEO 爆款文案。</p>
+        <h3>503/429 自動重試</h3>
+        <p>整理指數退避、最大重試次數與熔斷思路，避免高峰期把錯誤直接拋給使用者。</p>
+        <p style="margin-top:12px;"><a href="/posts/deepseek-api-retry-guide/">閱讀教程 →</a></p>
       </div>
       <div class="grid-card">
-        <h3>🎨 前端樣式防溢出技術</h3>
-        <p>獨創 word-break 換行機制與 Markdown 圍欄清洗技術，確保 AI 生成的長代碼與連結在手機端與電腦端均能百分之百不破版呈現。</p>
+        <h3>提示詞入門</h3>
+        <p>從角色、任務、輸出格式三要素入手，減少幻覺與空泛回答。</p>
+        <p style="margin-top:12px;"><a href="/posts/deepseek-prompt-basics/">閱讀教程 →</a></p>
       </div>
       <div class="grid-card">
-        <h3>📊 矩陣交叉內鏈策略</h3>
-        <p>揭秘 deepseek-chat、hk-deepseek 等 5 大域名如何通過不重複錨文本進行權重對衝，打造搜尋引擎眼中的權威站群聯盟。</p>
+        <h3>本地 Ollama 部署</h3>
+        <p>在 macOS / Windows 透過 Ollama 拉取 DeepSeek 模型，並檢查繁體輸出品質。</p>
+        <p style="margin-top:12px;"><a href="/posts/deepseek-ollama-local-setup/">閱讀教程 →</a></p>
       </div>
       <div class="grid-card">
-        <h3>🌐 港台在地化語意微調</h3>
-        <p>專注於繁體正體中文優化。多用「教學、優化、中小企、數字轉型」等高 Impression 關鍵字，精準捕獲 Google 海外華人流量。</p>
+        <h3>更多技術文章</h3>
+        <p>瀏覽完整文章列表，包含 API 安全、提示詞進階與企業落地案例等延伸主題。</p>
+        <p style="margin-top:12px;"><a href="/posts/">查看全部 →</a></p>
       </div>
     </div>
   </div>
@@ -93,9 +92,9 @@ description: 專注於 DeepSeek 推理模型的一號核心節點佈局。提供
 
 <section class="home-posts">
   <div class="container">
-    <h2 style="font-size: 26px; border-left: 5px solid var(--main-indigo); padding-left: 15px; margin-bottom: 40px;">🔥 樞紐實時技術動態</h2>
+    <h2 style="font-size: 26px; border-left: 5px solid var(--main-indigo); padding-left: 15px; margin-bottom: 40px;">最新教程</h2>
     <div class="post-list-wrapper">
-      {% for post in collections.posts | limit(5) %}
+      {% for post in collections.indexablePosts | limit(5) %}
         <article class="post-item-simple">
           <a href="{{ post.url }}">{{ post.data.title }}</a>
           <span class="post-date">{{ post.date | dateFilter }}</span>
@@ -103,7 +102,7 @@ description: 專注於 DeepSeek 推理模型的一號核心節點佈局。提供
       {% endfor %}
     </div>
     <div style="margin-top: 40px; text-align: center;">
-      <a href="/posts/" style="color: var(--main-indigo); font-weight: bold; text-decoration: none;">查看全量一號存檔 &raquo;</a>
+      <a href="/posts/" style="color: var(--main-indigo); font-weight: bold; text-decoration: none;">查看全部文章 &raquo;</a>
     </div>
   </div>
 </section>

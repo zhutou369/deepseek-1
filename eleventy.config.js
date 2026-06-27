@@ -1,42 +1,82 @@
 module.exports = function (eleventyConfig) {
-  // 1. 🌟 靜態資源搬運：將所有資源複製路徑全部對齊 src/ 開頭
   eleventyConfig.addPassthroughCopy("src/css");
   eleventyConfig.addPassthroughCopy("src/static");
   eleventyConfig.addPassthroughCopy("src/images.txt");
-  eleventyConfig.addPassthroughCopy("src/ai1"); 
+  eleventyConfig.addPassthroughCopy("src/ai1");
+  eleventyConfig.addPassthroughCopy("src/robots.txt");
+  eleventyConfig.addPassthroughCopy({ "src/*.txt": "/" });
 
-  // 2. 🌟 註冊全量文章集合：精準掃描 src/posts/ 目錄下的所有 .md 檔案
-  eleventyConfig.addCollection("posts", function (collectionApi) {
-    return collectionApi.getFilteredByGlob("src/posts/*.md").sort((a, b) => {
-      return b.date - a.date; // 最新發布與更新的文章會自動排在最前面
-    });
+  eleventyConfig.addGlobalData("eleventyComputed", {
+    noindex: (data) => {
+      if (data.noindex === true) return true;
+      if (data.featured === true) return false;
+
+      const inputPath = data.page?.inputPath || "";
+      if (!inputPath.includes("posts")) return false;
+
+      const desc = data.description || "";
+      const title = data.title || "";
+
+      if (desc.includes("專業技術解析與香港本地化實操指南")) return true;
+      if (data.generated === true) return true;
+      if (/官方|權威|站群|SEO 排名|黑帽|跨境流量|智能一號核心樞紐|免翻牆中轉|爆款文案秘籍/.test(title)) {
+        return true;
+      }
+
+      return false;
+    }
   });
 
-  // 3. 🌟 註冊首頁及側邊欄專用的 limit 限制過濾器
+  eleventyConfig.addCollection("posts", function (collectionApi) {
+    return collectionApi.getFilteredByGlob("src/posts/*.md").sort((a, b) => b.date - a.date);
+  });
+
+  eleventyConfig.addCollection("indexablePosts", function (collectionApi) {
+    return collectionApi
+      .getFilteredByGlob("src/posts/*.md")
+      .filter((item) => {
+        const data = item.data;
+        if (data.noindex === true || data.generated === true) return false;
+        if (data.featured === true) return true;
+        const desc = data.description || "";
+        const title = data.title || "";
+        if (desc.includes("專業技術解析與香港本地化實操指南")) return false;
+        if (/官方|權威|站群|SEO 排名|黑帽|跨境流量|智能一號核心樞紐|免翻牆中轉|爆款文案秘籍/.test(title)) {
+          return false;
+        }
+        return true;
+      })
+      .sort((a, b) => b.date - a.date);
+  });
+
   eleventyConfig.addFilter("limit", function (arr, limit) {
     if (!Array.isArray(arr)) return [];
     return arr.slice(0, limit);
   });
 
-  // 4. 🌟 註冊繁體香港標準時間格式化過濾器 (渲染格式：YYYY年MM月DD日)
   eleventyConfig.addFilter("dateFilter", function (dateValue) {
     if (!dateValue) return "";
     const d = new Date(dateValue);
     const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
     return `${year}年${month}月${day}日`;
   });
 
-  // 5. 🌟 核心路徑與沙盒沙箱配置：以 "src" 作為開發根目錄
+  eleventyConfig.addFilter("htmlDate", function (dateValue) {
+    if (!dateValue) return "";
+    const d = new Date(dateValue);
+    return d.toISOString().slice(0, 10);
+  });
+
   return {
     dir: {
       input: "src",
-      includes: "_includes", // 對應 src/_includes/ 檔案夾
-      output: "_site",       // 打包編譯後的靜態網頁輸出目錄
+      includes: "_includes",
+      output: "_site"
     },
     templateFormats: ["md", "njk", "html"],
     markdownTemplateEngine: "njk",
-    htmlTemplateEngine: "njk",
+    htmlTemplateEngine: "njk"
   };
 };

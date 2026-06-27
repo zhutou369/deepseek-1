@@ -3,16 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ title }}{% if page.url != '/' %} | DeepSeek 一號核心樞紐{% endif %}</title>
-  <meta name="description" content="{{ description }}">
-  <meta name="keywords" content="DeepSeek, 智能樞紐, AI模型, 一號節點, 深度求索, 技術研發, 跨境提效">
-  
+  {% set docTitle = title or site.title %}
+  {% set metaDescription = description or site.description %}
+  {% set canonicalPath = canonicalUrl or page.url or "/" %}
+  {% set canonical = site.url + canonicalPath %}
+  <title>{% if page.url != "/" %}{{ docTitle }} | {{ site.brand }}{% else %}{{ site.title }}{% endif %}</title>
+  <meta name="description" content="{{ metaDescription }}">
+  <meta name="keywords" content="{{ pageKeywords or site.keywords }}">
+  {% if noindex %}
+  <meta name="robots" content="noindex,follow">
+  {% else %}
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  {% endif %}
+  <link rel="canonical" href="{{ canonical }}">
+  <meta property="og:type" content="{% if layout == 'layouts/post.njk' %}article{% else %}website{% endif %}">
+  <meta property="og:title" content="{{ docTitle }}">
+  <meta property="og:description" content="{{ metaDescription }}">
+  <meta property="og:url" content="{{ canonical }}">
+  <meta property="og:site_name" content="{{ site.brand }}">
+  <meta property="og:locale" content="{{ site.locale }}">
+  <meta name="twitter:card" content="summary">
+  <meta name="baidu-site-verification" content="codeva-gbRwIYdftJ">
+  <script type="application/ld+json">
+{{ {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": site.brand,
+  "url": site.url,
+  "description": site.description
+} | dump | safe }}
+  </script>
+
   <style>
     :root { --main-indigo: #4338ca; --tech-gray: #1e293b; --soft-bg: #f8fafc; --text-dark: #0f172a; }
     body { font-family: 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: var(--text-dark); margin: 0; padding: 0; background: #fff; }
     .container { max-width: 1100px; margin: 0 auto; padding: 0 25px; }
-    
-    /* Header Logic: 11ty 智慧 H1 判斷 */
     .site-header { background: #fff; border-bottom: 1px solid #e5e7eb; padding: 18px 0; position: sticky; top: 0; z-index: 999; }
     .nav-flex { display: flex; justify-content: space-between; align-items: center; }
     .logo-box a { text-decoration: none; color: var(--main-indigo); font-weight: 800; font-size: 20px; letter-spacing: 1px; }
@@ -20,8 +45,6 @@
     .nav-menu { list-style: none; display: flex; gap: 30px; margin: 0; padding: 0; }
     .nav-menu a { text-decoration: none; color: #4b5563; font-weight: 500; transition: 0.3s; }
     .nav-menu a:hover, .nav-menu a.active { color: var(--main-indigo); }
-
-    /* Footer & Friend Links */
     .site-footer { background: var(--tech-gray); color: #94a3b8; padding: 60px 0 30px; margin-top: 80px; }
     .footer-friends h4 { color: #f1f5f9; font-size: 16px; margin-bottom: 20px; }
     .friend-links-grid { display: flex; flex-wrap: wrap; gap: 15px 35px; border-bottom: 1px solid #334155; padding-bottom: 30px; margin-bottom: 30px; }
@@ -30,24 +53,22 @@
     .copyright { text-align: center; font-size: 13px; color: #64748b; }
   </style>
 
-  {# 51.la 統計注入 #}
-  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-  <script>LA.init({id:"3K7l95Zodr0uFrIN",ck:"3K7l95Zodr0uFrIN"})</script>
+  <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js" defer></script>
+  <script>window.addEventListener("load",function(){if(window.LA){LA.init({id:"{{ site.laId }}",ck:"{{ site.laId }}"})}})</script>
 </head>
 <body>
 
   <header class="site-header">
     <div class="container nav-flex">
-      {# 🌟 H1 衝突核心解決：首頁使用 H1，內頁 Logo 自動降級 #}
       {% if page.url == "/" %}
-        <h1 class="logo-box" style="margin:0;"><a href="/">DEEPSEEK 一號核心樞紐</a></h1>
+        <h1 class="logo-box" style="margin:0;"><a href="/">{{ site.brand }}</a></h1>
       {% else %}
-        <div class="logo-box"><a href="/">DEEPSEEK 一號核心樞紐</a></div>
+        <div class="logo-box"><a href="/">{{ site.brand }}</a></div>
       {% endif %}
       <nav>
         <ul class="nav-menu">
-          <li><a href="/" {% if page.url == "/" %}class="active"{% endif %}>樞紐首頁</a></li>
-          <li><a href="/posts/" {% if page.url.startsWith('/posts/') %}class="active"{% endif %}>技術存檔</a></li>
+          <li><a href="/" {% if page.url == "/" %}class="active"{% endif %}>首頁</a></li>
+          <li><a href="/posts/" {% if page.url.startsWith('/posts/') %}class="active"{% endif %}>技術文章</a></li>
         </ul>
       </nav>
     </div>
@@ -60,17 +81,16 @@
   <footer class="site-footer">
     <div class="container">
       <div class="footer-friends">
-        <h4>🌐 站群戰略聯盟夥伴：</h4>
+        <h4>相關 DeepSeek 資料站</h4>
         <div class="friend-links-grid">
-          <a href="https://deepseek-chat.com" target="_blank">DeepSeek 智能對話大廳</a>
-          <a href="https://hk-deepseek.com" target="_blank">DeepSeek 香港繁體門戶</a>
-          <a href="https://deepseek-in.com" target="_blank">DeepSeek 國際跨境專區</a>
-          <a href="https://deepseek-1.com" target="_blank">DeepSeek 一號核心樞紐</a>
-          <a href="https://deepseek-my.com" target="_blank">DeepSeek 馬來西亞資訊網</a>
+          <a href="https://deepseek-chat.com" target="_blank" rel="noopener">DeepSeek 對話入口整理</a>
+          <a href="https://hk-deepseek.com" target="_blank" rel="noopener">DeepSeek 香港繁體資料</a>
+          <a href="https://deepseek-in.com" target="_blank" rel="noopener">DeepSeek 國際版說明</a>
+          <a href="https://deepseek-my.com" target="_blank" rel="noopener">DeepSeek 馬來西亞資料</a>
         </div>
       </div>
       <div class="copyright">
-        <p>&copy; 2026 DeepSeek 1st Global Hub. 基於 Eleventy 與 51.la 安全審計.</p>
+        <p>&copy; 2026 {{ site.brand }} · 本站為第三方使用說明與技術整理，非 DeepSeek 官方網站。</p>
       </div>
     </div>
   </footer>

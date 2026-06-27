@@ -1,7 +1,9 @@
 ---
 layout: layouts/base.njk
-title: 所有 DeepSeek 技術文章與應用教學檔案庫
-description: 瀏覽所有關於 DeepSeek (深度求索) 的繁體中文技術指南、API 整合方案、提示詞優化技巧及香港本地數字轉型精選案例。
+title: DeepSeek 技術文章與使用教程
+description: 瀏覽 DeepSeek 網頁版登入、API 接入、提示詞技巧、錯誤排查與本地部署等繁體中文教程。
+eleventyComputed:
+  noindex: "{{ pagination.pageNumber > 0 }}"
 pagination:
   data: collections.posts
   size: 10
@@ -25,8 +27,8 @@ permalink: "/posts/{% if pagination.pageNumber > 0 %}page-{{ pagination.pageNumb
 </style>
 
 <header class="archive-header">
-  <h1 style="font-size: 26px; color: #111; margin: 0 0 10px 0;">DeepSeek 繁體中文全量文章檔案庫</h1>
-  <p style="color:#666; margin:0;">這裏匯集了本站發布的所有關於 DeepSeek 模型的深度剖析、本地化私有部署與商業落地實踐指南。</p>
+  <h1 style="font-size: 26px; color: #111; margin: 0 0 10px 0;">DeepSeek 技術文章列表</h1>
+  <p style="color:#666; margin:0;">優先收錄可直接照做的入門教程；部分早期自動生成內容已從搜尋索引中排除，但仍保留供參考。</p>
 </header>
 
 <div class="archive-layout-grid">
@@ -36,7 +38,7 @@ permalink: "/posts/{% if pagination.pageNumber > 0 %}page-{{ pagination.pageNumb
         <span class="archive-date">發布日期：{{ post.date | dateFilter }}</span>
         <h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
         <p style="font-size:14px; color:#4a5568; line-height:1.6;">{{ post.data.description }}</p>
-        <a href="{{ post.url }}" style="font-size:13px; font-weight:bold; text-decoration:none; color:#0066cc;">閱讀全文 &middot; 掌握技術精髓 &raquo;</a>
+        <a href="{{ post.url }}" style="font-size:13px; font-weight:bold; text-decoration:none; color:#0066cc;">閱讀全文 &raquo;</a>
       </article>
     {% else %}
       <p>精準技術指南正在加載中，請稍候回來查看。</p>
@@ -74,9 +76,9 @@ permalink: "/posts/{% if pagination.pageNumber > 0 %}page-{{ pagination.pageNumb
   </div>
 
   <aside class="archive-sidebar" style="background: #fff; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; height: fit-content;">
-    <h3 style="margin-top:0; font-size:16px; border-left:4px solid #0066cc; padding-left:10px; margin-bottom:15px;">⚡ 實時更新情報</h3>
+    <h3 style="margin-top:0; font-size:16px; border-left:4px solid #0066cc; padding-left:10px; margin-bottom:15px;">最新教程</h3>
     <ul style="list-style:none; padding:0; margin:0; line-height:2.2; font-size:14px;">
-      {% for item in collections.posts | limit(5) %}
+      {% for item in collections.indexablePosts | limit(5) %}
         <li style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><a href="{{ item.url }}" style="color:#333; text-decoration:none;">{{ item.data.title }}</a></li>
       {% endfor %}
     </ul>
