@@ -2,16 +2,19 @@
 title: "DeepSeek API 503/429 錯誤的重試與熔斷策略"
 description: "實作 DeepSeek API 在 503 與 429 錯誤下的指數退避重試、最大重試次數與熔斷器模式，提升服務穩定性。"
 date: 2026-06-27
-updated: 2026-06-27
+updated: 2026-07-02
 featured: true
+coverImage: "/static/posts/deepseek-api-retry-cover.svg"
 tags: ["posts"]
 layout: "layouts/post.njk"
 permalink: "/posts/deepseek-api-retry-guide/index.html"
 ---
 
-503 與 429 都是暫時性錯誤，但處理方式不同：503 通常表示服務端暫時不可用，429 表示你的請求過快。兩者都需要重試，但不能無腦循環。
+503 與 429 都是暫時性錯誤，但處理方式不同：503 通常表示服務端暫時不可用，429 表示你的請求過快。兩者都需要重試，但不能無腦循環。申請 API 前可先了解 [密鑰與限流規則](/posts/deepseek-api-key-and-limits/)。
 
 ## 錯誤區分
+
+![503 與 429 錯誤處理流程](/static/posts/deepseek-api-retry-step.svg)
 
 | 狀態碼 | 含義 | 是否適合重試 |
 |--------|------|--------------|
@@ -76,4 +79,13 @@ def call_with_retry(fn, max_retries=4):
 - 請求耗時
 - 使用的模型與 Token 數
 
-穩定的重試策略能把暫時性故障對用户的影響降到最低。
+- 不要對 401/403 盲目重試，會浪費配額
+- 每次重試記錄 `attempt` 與 `wait_ms` 便於事後分析
+
+穩定的重試策略能把暫時性故障對用戶的影響降到最低。離線測試可改用 [Ollama 本地部署](/posts/deepseek-ollama-local-setup/)；網頁版登入問題見 [登入排查指南](/posts/deepseek-web-login-troubleshoot/)。
+
+## 相關教程
+
+- [API 密鑰、限流與 429](/posts/deepseek-api-key-and-limits/)
+- [提示詞入門與減少幻覺](/posts/deepseek-prompt-basics/)
+- [網頁版登入失敗排查](/posts/deepseek-web-login-troubleshoot/)

@@ -3,10 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="baidu-site-verification" content="codeva-gbRwIYdftJ">
+  {% if site.googleSiteVerification %}
+  <meta name="google-site-verification" content="{{ site.googleSiteVerification }}">
+  {% endif %}
   {% set docTitle = title or site.title %}
   {% set metaDescription = description or site.description %}
   {% set canonicalPath = canonicalUrl or page.url or "/" %}
   {% set canonical = site.url + canonicalPath %}
+  {% set rawImage = ogImage or coverImage or site.ogImage or "/static/og-default.png" %}
+  {% set shareImage = (rawImage if not rawImage.endsWith('.svg') else site.ogImage) | assetUrl %}
+  {% set shareImageAbs = site.url + shareImage %}
+  <link rel="icon" href="/static/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.brand }}" href="/feed.xml">
   <title>{% if page.url != "/" %}{{ docTitle }} | {{ site.brand }}{% else %}{{ site.title }}{% endif %}</title>
   <meta name="description" content="{{ metaDescription }}">
   <meta name="keywords" content="{{ pageKeywords or site.keywords }}">
@@ -22,8 +32,10 @@
   <meta property="og:url" content="{{ canonical }}">
   <meta property="og:site_name" content="{{ site.brand }}">
   <meta property="og:locale" content="{{ site.locale }}">
-  <meta name="twitter:card" content="summary">
-  <meta name="baidu-site-verification" content="codeva-gbRwIYdftJ">
+  <meta property="og:image" content="{{ shareImageAbs }}">
+  <meta property="og:image:alt" content="{{ docTitle }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="{{ shareImageAbs }}">
   <script type="application/ld+json">
 {{ {
   "@context": "https://schema.org",
@@ -33,6 +45,16 @@
   "description": site.description
 } | dump | safe }}
   </script>
+
+  {% if site.gaId %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.gaId }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ site.gaId }}');
+  </script>
+  {% endif %}
 
   <style>
     :root { --main-indigo: #4338ca; --tech-gray: #1e293b; --soft-bg: #f8fafc; --text-dark: #0f172a; }
@@ -90,7 +112,7 @@
         </div>
       </div>
       <div class="copyright">
-        <p>&copy; 2026 {{ site.brand }} · 本站為第三方使用說明與技術整理，非 DeepSeek 官方網站。</p>
+        <p>&copy; 2026 {{ site.brand }} · 本站為第三方使用說明與技術整理，非 DeepSeek 官方網站。 · <a href="/privacy/" style="color:#94a3b8;">私隱政策</a></p>
       </div>
     </div>
   </footer>

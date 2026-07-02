@@ -1,10 +1,33 @@
+const siteData = require("./src/_data/site.json");
+
+function assetVersion() {
+  return siteData.assetVersion || "1";
+}
+
+function cacheBustStaticUrl(url) {
+  const path = String(url || "").trim();
+  if (!path.startsWith("/static/")) return path;
+  if (/[?&]v=/.test(path)) return path;
+  return `${path}?v=${assetVersion()}`;
+}
+
 module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/css");
   eleventyConfig.addPassthroughCopy("src/static");
+  eleventyConfig.addPassthroughCopy({ "src/_headers": "_headers" });
+  eleventyConfig.addPassthroughCopy({ "src/_redirects": "_redirects" });
   eleventyConfig.addPassthroughCopy("src/images.txt");
   eleventyConfig.addPassthroughCopy("src/ai1");
   eleventyConfig.addPassthroughCopy("src/robots.txt");
   eleventyConfig.addPassthroughCopy({ "src/*.txt": "/" });
+
+  eleventyConfig.addFilter("assetUrl", cacheBustStaticUrl);
+
+  eleventyConfig.addTransform("cache-bust-static-assets", function (content, outputPath) {
+    if (!outputPath || !outputPath.endsWith(".html")) return content;
+    const version = assetVersion();
+    return content.replace(/\/static\/[^"'\s<>]+\.svg(?![^"']*[?&]v=)/g, (path) => `${path}?v=${version}`);
+  });
 
   eleventyConfig.addGlobalData("eleventyComputed", {
     noindex: (data) => {
@@ -67,6 +90,11 @@ module.exports = function (eleventyConfig) {
     if (!dateValue) return "";
     const d = new Date(dateValue);
     return d.toISOString().slice(0, 10);
+  });
+
+  eleventyConfig.addFilter("rfc822", function (dateValue) {
+    if (!dateValue) return "";
+    return new Date(dateValue).toUTCString();
   });
 
   return {

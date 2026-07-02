@@ -1,0 +1,32 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/privacy/
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/posts/
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/posts/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/*.html
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/sitemap.xml
+  Cache-Control: public, max-age=3600
+  Content-Type: application/xml; charset=utf-8
+
+/feed.xml
+  Cache-Control: public, max-age=3600
+  Content-Type: application/rss+xml; charset=utf-8
+
+/static/*
+  Cache-Control: public, max-age=604800, immutable
+
+/css/*
+  Cache-Control: public, max-age=604800, immutable

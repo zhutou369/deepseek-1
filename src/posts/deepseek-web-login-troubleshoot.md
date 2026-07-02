@@ -2,16 +2,19 @@
 title: "DeepSeek 網頁版登入失敗與常見錯誤排查"
 description: "逐步排查 DeepSeek 網頁版登入失敗、503 忙碌、驗證碼異常與瀏覽器快取問題，附香港網絡環境注意事項。"
 date: 2026-06-27
-updated: 2026-06-27
+updated: 2026-07-02
 featured: true
+coverImage: "/static/posts/deepseek-login-cover.svg"
 tags: ["posts"]
 layout: "layouts/post.njk"
 permalink: "/posts/deepseek-web-login-troubleshoot/index.html"
 ---
 
-DeepSeek 網頁版登入問題大多數並非帳號本身故障，而是瀏覽器狀態、網絡路由或高峰時段服務忙碌造成。下面按出現頻率由高到低整理排查順序。
+DeepSeek 網頁版登入問題大多數並非帳號本身故障，而是瀏覽器狀態、網絡路由或高峰時段服務忙碌造成。下面按出現頻率由高到低整理排查順序。登入成功後若要接入 API，請繼續閱讀 [API 密鑰與限流指南](/posts/deepseek-api-key-and-limits/)。
 
 ## 先確認入口與帳號狀態
+
+![DeepSeek 網頁版登入排查步驟](/static/posts/deepseek-login-step.svg)
 
 1. 使用 `chat.deepseek.com` 或 DeepSeek 公開提供的網頁入口，避免第三方仿站。
 2. 若使用 Google / 電郵登入，先確認該第三方帳號能正常收驗證碼。
@@ -23,7 +26,7 @@ DeepSeek 網頁版登入問題大多數並非帳號本身故障，而是瀏覽�
 
 - 等待 1–3 分鐘後重新整理，不要連續狂點登入。
 - 改用有線網絡或不同 DNS，排除本地路由不穩。
-- 若只有網頁版失敗而 API 正常，通常是前端入口流量過高，稍後再試即可。
+- 若只有網頁版失敗而 API 正常，通常是前端入口流量過高，稍後再試即可。API 端 503 的重試策略見 [熔斷與退避指南](/posts/deepseek-api-retry-guide/)。
 
 ## 瀏覽器快取與插件干擾
 
@@ -48,4 +51,11 @@ DeepSeek 網頁版登入問題大多數並非帳號本身故障，而是瀏覽�
 - 是否使用 VPN / 公司代理
 - 問題開始時間與是否可穩定重現
 
-有這些信息，通常能很快區分是服務端高峰、本地網絡還是瀏覽器配置問題。
+有這些信息，通常能很快區分是服務端高峰、本地網絡還是瀏覽器配置問題。登入穩定後，下一步通常是 [API 接入](/posts/deepseek-api-key-and-limits/) 或 [本地 Ollama 測試](/posts/deepseek-ollama-local-setup/)。
+
+## 相關教程
+
+- [API 密鑰、限流與 429](/posts/deepseek-api-key-and-limits/)
+- [503/429 重試與熔斷策略](/posts/deepseek-api-retry-guide/)
+- [提示詞入門與減少幻覺](/posts/deepseek-prompt-basics/)
+- [Ollama 本地部署 DeepSeek](/posts/deepseek-ollama-local-setup/)

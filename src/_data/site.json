@@ -5,5 +5,9 @@
   "keywords": "DeepSeek,DeepSeek API,DeepSeek 登入,DeepSeek 提示詞,DeepSeek 教程,深度求索",
   "url": "https://deepseek-1.com",
   "laId": "3K7l95Zodr0uFrIN",
-  "locale": "zh_HK"
+  "locale": "zh_HK",
+  "ogImage": "/static/og-default.png",
+  "assetVersion": "2",
+  "googleSiteVerification": "",
+  "gaId": ""
 }

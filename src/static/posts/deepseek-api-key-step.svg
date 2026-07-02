@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="420" viewBox="0 0 800 420" role="img" aria-label="API Key 申請四步流程">
+  <rect width="800" height="420" fill="#f8fafc"/>
+  <text x="40" y="45" fill="#0f172a" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">API Key 申請流程</text>
+  <g font-family="Segoe UI, sans-serif">
+    <rect x="40" y="80" width="160" height="110" rx="12" fill="#fff" stroke="#cbd5e1"/>
+    <text x="60" y="115" fill="#2563eb" font-size="14" font-weight="700">Step 1</text>
+    <text x="60" y="145" fill="#334155" font-size="15">登入開發者平台</text>
+    <rect x="220" y="80" width="160" height="110" rx="12" fill="#fff" stroke="#cbd5e1"/>
+    <text x="240" y="115" fill="#2563eb" font-size="14" font-weight="700">Step 2</text>
+    <text x="240" y="145" fill="#334155" font-size="15">建立專案</text>
+    <rect x="400" y="80" width="160" height="110" rx="12" fill="#fff" stroke="#cbd5e1"/>
+    <text x="420" y="115" fill="#2563eb" font-size="14" font-weight="700">Step 3</text>
+    <text x="420" y="145" fill="#334155" font-size="15">生成 API Key</text>
+    <rect x="580" y="80" width="180" height="110" rx="12" fill="#fff" stroke="#cbd5e1"/>
+    <text x="600" y="115" fill="#2563eb" font-size="14" font-weight="700">Step 4</text>
+    <text x="600" y="145" fill="#334155" font-size="15">存入 Secret Manager</text>
+  </g>
+  <path d="M200 135 H220 M380 135 H400 M560 135 H580" stroke="#94a3b8" stroke-width="2"/>
+  <rect x="40" y="230" width="720" height="150" rx="12" fill="#eff6ff" stroke="#93c5fd"/>
+  <text x="60" y="265" fill="#1e40af" font-family="Segoe UI, sans-serif" font-size="16" font-weight="700">安全提醒</text>
+  <text x="60" y="295" fill="#334155" font-family="Segoe UI, sans-serif" font-size="15">• Key 只顯示一次，勿寫入前端或公開 Git</text>
+  <text x="60" y="325" fill="#334155" font-family="Segoe UI, sans-serif" font-size="15">• 生產與測試環境使用不同 Key</text>
+  <text x="60" y="355" fill="#334155" font-family="Segoe UI, sans-serif" font-size="15">• 定期輪換並刪除未使用的舊 Key</text>
+</svg>

@@ -16,6 +16,9 @@ eleventyExcludeFromCollections: true
     <lastmod>{{ collections.indexablePosts[0].date | htmlDate }}</lastmod>
     {% endif %}
   </url>
+  <url>
+    <loc>{{ site.url }}/privacy/</loc>
+  </url>
 {% for post in collections.indexablePosts %}
   <url>
     <loc>{{ site.url }}{{ post.url }}</loc>

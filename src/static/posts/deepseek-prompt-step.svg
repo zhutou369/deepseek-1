@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="420" viewBox="0 0 800 420" role="img" aria-label="提示詞模板結構示意">
+  <rect width="800" height="420" fill="#f8fafc"/>
+  <text x="40" y="45" fill="#0f172a" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">Prompt 模板結構</text>
+  <rect x="40" y="70" width="720" height="300" rx="12" fill="#0f172a"/>
+  <text x="70" y="110" fill="#64748b" font-family="Consolas, monospace" font-size="14"># 角色</text>
+  <text x="70" y="140" fill="#e2e8f0" font-family="Consolas, monospace" font-size="15">你是資深技術文件編輯…</text>
+  <text x="70" y="180" fill="#64748b" font-family="Consolas, monospace" font-size="14"># 任務</text>
+  <text x="70" y="210" fill="#e2e8f0" font-family="Consolas, monospace" font-size="15">請把以下 API 錯誤改寫為 FAQ…</text>
+  <text x="70" y="250" fill="#64748b" font-family="Consolas, monospace" font-size="14"># 輸出格式</text>
+  <text x="70" y="280" fill="#93c5fd" font-family="Consolas, monospace" font-size="15">- 使用 ## 作為標題</text>
+  <text x="70" y="310" fill="#93c5fd" font-family="Consolas, monospace" font-size="15">- 每題 ≤ 80 字 · 不確定標註「需官方確認」</text>
+  <text x="70" y="350" fill="#64748b" font-family="Consolas, monospace" font-size="14"># 約束：僅根據提供材料回答</text>
+</svg>

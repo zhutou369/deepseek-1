@@ -2,16 +2,19 @@
 title: "DeepSeek 提示詞入門：減少空泛回答與幻覺"
 description: "用角色、任務、輸出格式三要素撰寫 DeepSeek 提示詞，並透過 Few-Shot 與約束條件降低幻覺與格式錯誤。"
 date: 2026-06-27
-updated: 2026-06-27
+updated: 2026-07-02
 featured: true
+coverImage: "/static/posts/deepseek-prompt-cover.svg"
 tags: ["posts"]
 layout: "layouts/post.njk"
 permalink: "/posts/deepseek-prompt-basics/index.html"
 ---
 
-提示詞寫得好不好，差別往往在於模型是否清楚知道「要做什麼、按什麼格式輸出、哪些內容不能編造」。
+提示詞寫得好不好，差別往往在於模型是否清楚知道「要做什麼、按什麼格式輸出、哪些內容不能編造」。接入 API 時若遇到格式錯誤或 429，請搭配 [密鑰與限流指南](/posts/deepseek-api-key-and-limits/) 一併排查。
 
 ## 三要素模板
+
+![DeepSeek 提示詞三要素結構](/static/posts/deepseek-prompt-step.svg)
 
 每次寫 Prompt 至少包含：
 
@@ -62,4 +65,11 @@ permalink: "/posts/deepseek-prompt-basics/index.html"
 2. 看輸出差異，再補充約束
 3. 固定可用的 Prompt 存成模板，避免每次從零寫起
 
-好的提示詞不是越長越好，而是约束清楚、示例具體、边界明確。
+好的提示詞不是越長越好，而是约束清楚、示例具體、边界明確。離線驗證 Prompt 可試 [Ollama 本地部署](/posts/deepseek-ollama-local-setup/)；API 調用不穩時見 [重試與熔斷策略](/posts/deepseek-api-retry-guide/)。
+
+## 相關教程
+
+- [API 密鑰、限流與 429](/posts/deepseek-api-key-and-limits/)
+- [503/429 重試與熔斷策略](/posts/deepseek-api-retry-guide/)
+- [網頁版登入失敗排查](/posts/deepseek-web-login-troubleshoot/)
+- [Ollama 本地部署 DeepSeek](/posts/deepseek-ollama-local-setup/)

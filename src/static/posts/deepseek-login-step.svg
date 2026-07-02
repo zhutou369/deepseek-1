@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="420" viewBox="0 0 800 420" role="img" aria-label="登入故障排查順序">
+  <rect width="800" height="420" fill="#f8fafc"/>
+  <text x="40" y="45" fill="#0f172a" font-family="Segoe UI, sans-serif" font-size="22" font-weight="700">排查順序（由高到低）</text>
+  <g font-family="Segoe UI, sans-serif" font-size="15" fill="#334155">
+    <rect x="40" y="70" width="720" height="52" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="60" y="102">1. 確認官方入口 chat.deepseek.com，排除仿站</text>
+    <rect x="40" y="132" width="720" height="52" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="60" y="164">2. 503 忙碌 → 等待 1–3 分鐘，勿連續狂點</text>
+    <rect x="40" y="194" width="720" height="52" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="60" y="226">3. 無痕視窗測試，停用廣告/腳本攔截插件</text>
+    <rect x="40" y="256" width="720" height="52" rx="10" fill="#fff" stroke="#cbd5e1"/>
+    <text x="60" y="288">4. 清除 Cookie 與快取後重登</text>
+    <rect x="40" y="318" width="720" height="52" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
+    <text x="60" y="350">5. 香港用戶：對照家用網絡，排除公司 VPN / 公共 Wi‑Fi 攔截</text>
+  </g>
+</svg>

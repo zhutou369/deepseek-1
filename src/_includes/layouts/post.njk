@@ -28,7 +28,7 @@ layout: layouts/base.njk
   <article class="post-article">
     <h1 class="post-h1">{{ title }}</h1>
     <div class="post-meta">
-      <span>發佈日期：{{ date | dateFilter }}</span>{% if updated %} · 更新於 {{ updated | dateFilter }}{% endif %}
+      <time datetime="{{ date | htmlDate }}">發佈日期：{{ date | dateFilter }}</time>{% if updated %} · <time datetime="{{ updated | htmlDate }}">更新於 {{ updated | dateFilter }}</time>{% endif %}
       <span> · {{ site.brand }}</span>
     </div>
 
@@ -79,6 +79,7 @@ layout: layouts/base.njk
   "description": description,
   "datePublished": date | htmlDate,
   "dateModified": (updated | htmlDate) if updated else (date | htmlDate),
+  "image": site.url + ((coverImage if coverImage and not coverImage.endsWith('.svg') else site.ogImage) | assetUrl),
   "author": {
     "@type": "Organization",
     "name": site.brand

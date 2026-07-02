@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-label="503 429 重試與熔斷策略示意">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e293b"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <text x="80" y="100" fill="#93c5fd" font-family="Segoe UI, sans-serif" font-size="16" font-weight="600">RESILIENCE</text>
+  <text x="80" y="145" fill="#f8fafc" font-family="Segoe UI, sans-serif" font-size="28" font-weight="700">503 / 429 重試與熔斷</text>
+  <text x="80" y="180" fill="#94a3b8" font-family="Segoe UI, sans-serif" font-size="16">指數退避 · Jitter · Circuit Breaker</text>
+  <polyline points="80,360 180,300 280,320 380,220 480,240 580,140 680,160" fill="none" stroke="#38bdf8" stroke-width="4"/>
+  <circle cx="180" cy="300" r="8" fill="#fbbf24"/>
+  <circle cx="380" cy="220" r="8" fill="#fbbf24"/>
+  <circle cx="580" cy="140" r="8" fill="#22c55e"/>
+  <text x="110" y="395" fill="#64748b" font-family="Segoe UI, sans-serif" font-size="13">1s → 2s → 4s + jitter</text>
+  <rect x="520" y="250" width="200" height="90" rx="10" fill="#451a03" stroke="#f59e0b"/>
+  <text x="545" y="285" fill="#fde68a" font-family="Segoe UI, sans-serif" font-size="15" font-weight="700">熔斷 OPEN</text>
+  <text x="545" y="315" fill="#fcd34d" font-family="Segoe UI, sans-serif" font-size="13">連續 5 次失敗暫停 60s</text>
+</svg>
